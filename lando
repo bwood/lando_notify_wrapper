@@ -36,6 +36,35 @@ if ($arguments) {
   }
 }
 
+// Handle interactive prompt for rebuild and destroy
+if (array_intersect([
+    'rebuild',
+    'destroy'
+  ], $arguments) && !array_intersect(['-y', '--yes'], $options)) {
+
+  $question = "Are you sure you want to " . $arguments[0] . "? (y/N)\n";
+  $reply = NULL;
+  while ($reply != 'y' && $reply != 'n') {
+    print $question;
+    $handle = fopen("php://stdin", "r");
+    $reply = fgets($handle);
+    $reply = strtolower(substr(trim($reply), 0, 1));
+    $reply = substr($reply, 0, 1);
+    if ($reply === "") {
+      $reply = 'n';
+    }
+  }
+
+  if ($reply == 'n') {
+    exit(2);
+  }
+  else {
+    // pass the -y option so the real lando doesn't question us.
+    $command .= ' -y';
+  }
+}
+
+
 if (array_intersect(['-N', '--no-notify'], $options)) {
   $notify = FALSE;
 }
