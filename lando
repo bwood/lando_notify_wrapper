@@ -5,8 +5,10 @@
 $lando_full_path = '/usr/local/bin/lando';
 $lando_sites_path_match = 'Sites/lando';
 
+$notify = FALSE;
+
 $options = [];
-$arguments =[];
+$arguments = [];
 
 $arguments = array_filter($argv, function ($value) use (&$options) {
   if (substr($value, 0, 1) == '-') {
@@ -21,18 +23,21 @@ array_shift($arguments);
 
 $command = $lando_full_path . ' ' . implode(' ', $arguments) . ' ' . implode(' ', $options);
 
-switch ($arguments[0]) {
-  case "start":
-  case "restart":
-  case "build":
-  case "rebuild":
-  case "destroy":
-  case "init":
-    $alert = TRUE;
-    break;
-  default;
-    $alert = FALSE;
-    break;
+if ($arguments) {
+  switch ($arguments[0]) {
+    case "start":
+    case "restart":
+    case "build":
+    case "rebuild":
+    case "destroy":
+    case "init":
+      $notify = TRUE;
+      break;
+  }
+}
+
+if (array_intersect(['-N', '--no-notify'], $options)) {
+  $notify = FALSE;
 }
 
 // Execute the lando command
@@ -41,7 +46,7 @@ print implode("\n", $out);
 
 
 // Optionally display a notification.
-if ($alert) {
+if ($notify) {
 
   // Determine success of command.
   if ($exit_code_lando == 0) {
@@ -72,6 +77,20 @@ if ($alert) {
   if ($exit_code_oascript != 0) {
     print "Error: Failed to execute $cmd_oascript\n";
   }
+}
+
+// Append this wrapper's help
+if (array_intersect(['-h', '--help'], $options)) {
+  print <<<EOT
+
+Lando MacOS notification wrapper:
+  
+  Options:
+  
+  --no-notify, -N   Do not display MacOS notification
+  
+EOT;
+
 }
 
 exit($exit_code_lando);
