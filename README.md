@@ -2,7 +2,7 @@
 # Purpose
 Display MacOS notifications for certain [lando](https://github.com/lando/lando) commands.
 
-This is written in PHP after after an unsuccessfull attempt to implement it with a bash function. Calling lando from a bash function yielded puzzelling behavior.
+This is written in PHP after after an unsuccessfull attempt to implement it with a bash function. Calling lando from a bash function yielded puzzling behavior.
 
 # Installation
 - Copy the file 'lando' to a directory in your $PATH that is searched earlier than
