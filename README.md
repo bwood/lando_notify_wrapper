@@ -12,3 +12,6 @@ This is written in PHP after after an unsuccessfull attempt to implement it with
 the directory where lando is installed (`$LW_LANDO_REAL_PATH`). 
 5. Make sure the 'lando' file you just copied is executable. (`chmod +x lando`)
 6. If you have an existing terminal session, logout and then log back in.
+
+# Usage
+To suppress notifications use `--no-notify` or `-N`.
