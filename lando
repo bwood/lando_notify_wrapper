@@ -2,8 +2,15 @@
 <?php
 
 // Configure these variables for your system:
-$lando_full_path = '/usr/local/bin/lando';
-$lando_sites_path_match = 'Sites/lando';
+$lando_real_path = getenv('LW_LANDO_REAL_PATH');
+$lando_sites_path_match = getenv('LW_LANDO_SITES_PATH_MATCH')
+if (!$lando_real_path || !$lando_sites_path_match) {
+    print "Error: You must set these environment variables before using the lando notification wrapper:\n";
+    print "\texport LW_LANDO_REAL_PATH=/some/path # Remove this 'lando' file from your \$PATH and type 'which lando'\n";
+    print "\texport $lando_sites_path_match=some/part/of/path # Part of the path where your lando sites (apps) are installed. E.g. 'Sites/lando'\n";
+    exit(1);
+}
+
 
 $notify = FALSE;
 
@@ -21,7 +28,7 @@ $arguments = array_filter($argv, function ($value) use (&$options) {
 // Discard path to this script.
 array_shift($arguments);
 
-$command = $lando_full_path . ' ' . implode(' ', $arguments) . ' ' . implode(' ', $options);
+$command = $lando_real_path . ' ' . implode(' ', $arguments) . ' ' . implode(' ', $options);
 
 if ($arguments) {
   switch ($arguments[0]) {
